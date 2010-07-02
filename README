@@ -1,0 +1,3 @@
+This module adds a class to matplotlib to support animations in figure windows,
+as well as saving animations as movie files. This repository is a staging
+point for development until it gets checked into SVN trunk.
