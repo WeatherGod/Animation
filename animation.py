@@ -554,7 +554,7 @@ class Animation(object):
             updated_ax.append(a.axes)
 
         # After rendering all the needed artists, blit each axes individually.
-        for ax in updated_ax:
+        for ax in set(updated_ax):
             ax.figure.canvas.blit(ax.bbox)
 
     def _blit_clear(self, artists, bg_cache):
