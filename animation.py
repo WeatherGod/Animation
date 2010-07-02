@@ -39,7 +39,7 @@ class TimerBase(object):
     Backends need to implement a few specific methods in order to use their
     own timing mechanisms so that the timer events are integrated into their
     event loops.
-    
+
     Mandatory functions that must be implemented:
     * _timer_start: Contains backend-specific code for starting the timer
     * _timer_stop: Contains backend-specific code for stopping the timer
@@ -54,7 +54,7 @@ class TimerBase(object):
     * _on_timer: This is the internal function that any timer object should
         call, which will handle the task of running all callbacks that have
         been set.
-    
+
     Attributes:
     * interval: The time between timer events in milliseconds. Default
         is 1000 ms.
@@ -174,7 +174,7 @@ class TimerBase(object):
 class TimerQT(TimerBase):
     '''
     Subclass of :class:`backend_bases.TimerBase` that uses Qt4 timer events.
-    
+
     Attributes:
     * interval: The time between timer events in milliseconds. Default
         is 1000 ms.
@@ -186,7 +186,7 @@ class TimerQT(TimerBase):
     '''
     def __init__(self, *args, **kwargs):
         TimerBase.__init__(self, *args, **kwargs)
-        
+
         # Create a new timer and connect the timeout() signal to the
         # _on_timer method.
         from PyQt4 import QtCore
@@ -217,7 +217,7 @@ class TimerQT(TimerBase):
 class TimerWx(TimerBase):
     '''
     Subclass of :class:`backend_bases.TimerBase` that uses WxTimer events.
-    
+
     Attributes:
     * interval: The time between timer events in milliseconds. Default
         is 1000 ms.
@@ -261,7 +261,7 @@ class TimerWx(TimerBase):
 class TimerTk(TimerBase):
     '''
     Subclass of :class:`backend_bases.TimerBase` that uses Tk's timer events.
-    
+
     Attributes:
     * interval: The time between timer events in milliseconds. Default
         is 1000 ms.
@@ -297,7 +297,7 @@ class TimerTk(TimerBase):
 class TimerGTK(TimerBase):
     '''
     Subclass of :class:`backend_bases.TimerBase` that uses GTK for timer events.
-    
+
     Attributes:
     * interval: The time between timer events in milliseconds. Default
         is 1000 ms.
@@ -324,7 +324,7 @@ class TimerGTK(TimerBase):
 
     def _on_timer(self):
         TimerBase._on_timer(self)
-        
+
         # Gtk timeout_add() requires that the callback returns True if it
         # is to be called again.
         if len(self.callbacks) > 0 and not self._single:
@@ -370,14 +370,14 @@ class Animation(object):
     '''
     This class wraps the creation of an animation using matplotlib. It is
     only a base class which should be subclassed to provide needed behavior.
-    
+
     *fig* is the figure object that is used to get draw, resize, and any
     other needed events.
-    
+
     *event_source* is a class that can run a callback when desired events
     are generated, as well as be stopped and started. Examples include timers
     (see :class:`TimedAnimation`) and file system notifications.
-    
+
     *blit* is a boolean that controls whether blitting is used to optimize
     drawing.
     '''
@@ -428,14 +428,14 @@ class Animation(object):
         frame_prefix='_tmp'):
         '''
         Saves a movie file by drawing every frame.
-        
+
         *fps* is the frames per second in the movie
-        
+
         *codec* is the codec to be used,if it is supported by the output method.
-        
+
         *clear_temp* specifies whether the temporary image files should be
         deleted.
-        
+
         *frame_prefix* gives the prefix that should be used for individual
         image files.  This prefix will have a frame number (i.e. 0001) appended
         when saving individual frames.
@@ -599,10 +599,10 @@ class TimedAnimation(Animation):
     '''
     :class:`Animation` subclass that supports time-based animation, drawing
     a new frame every *interval* milliseconds.
-    
+
     *repeat* controls whether the animation should repeat when the sequence
     of frames is completed.
-    
+
     *repeat_delay* optionally adds a delay in milliseconds before repeating
     the animation.
     '''
@@ -623,7 +623,7 @@ class TimedAnimation(Animation):
 
     def _step(self, *args):
         '''
-        Handler for getting events. 
+        Handler for getting events.
         '''
         # Extends the _step() method for the Animation class.  If
         # Animation._step signals that it reached the end and we want to repeat,
@@ -667,7 +667,7 @@ class ArtistAnimation(TimedAnimation):
     def __init__(self, fig, artists, *args, **kwargs):
         # Internal list of artists drawn in the most recent frame.
         self._drawn_artists = []
-        
+
         # Use the list of artists as the framedata, which will be iterated
         # over by the machinery.
         self._framedata = artists
@@ -719,7 +719,7 @@ class FuncAnimation(TimedAnimation):
     (optional) arguments in *fargs*.
 
     *frames* can be a generator, an iterable, or a number of frames.
-    
+
     *init_func* is a function used to draw a clear frame. If not given, the
     results of drawing from the first item in the frames sequence will be
     used.
@@ -814,5 +814,5 @@ if __name__ == '__main__':
         ims.append((plt.pcolor(x, y, base + add, norm=plt.Normalize(0, 30)),))
     im_ani = ArtistAnimation(fig2, ims, interval=50, repeat_delay=1000, blit=False)
 #    im_ani.save('im.mp4')
-    
+
     plt.show()
