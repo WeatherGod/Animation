@@ -7,7 +7,6 @@ import mpl_toolkits.mplot3d.axes3d as p3
 
 from animation import FuncAnimation
 
-
 def Gen_RandLine(length, dims=2) :
     """
     Create a line using a random walk algorithm
@@ -27,8 +26,6 @@ def Gen_RandLine(length, dims=2) :
 
     return lineData
 
-
-
 def update_lines(num, dataLines, lines) :
     for line, data in zip(lines, dataLines) :
         # NOTE: there is no .set_data() for 3 dim data...
@@ -36,16 +33,9 @@ def update_lines(num, dataLines, lines) :
         line.set_3d_properties(data[2,:num])
     return lines
 
-
-
+# Attaching 3D axis to the figure
 fig = plt.figure()
-ax = p3.Axes3D(fig)		# Attaching 3D axis to the figure
-
-# add_new_timer only needed while running old matplotlib. This will dissappear
-# and no longer be necessary.
-#if not hasattr(fig1.canvas, 'new_timer') :
-#    from animation import add_new_features
-#    add_new_features(fig)
+ax = p3.Axes3D(fig)
 
 # Fifty lines of random 3-D lines
 data = [Gen_RandLine(25, 3) for index in xrange(50)]
@@ -68,7 +58,6 @@ ax.set_title('3D Test')
 
 # Creating the Animation object
 line_ani = FuncAnimation(fig, update_lines, 25, fargs=(data, lines),
-                              interval=50, blit=True)
+                              interval=50, blit=False)
 
 plt.show()
-
