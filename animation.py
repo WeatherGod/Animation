@@ -4,7 +4,6 @@
 #   - Also need to update http://www.scipy.org/Cookbook/Matplotlib/Animations
 # * Need to look at simplyfing iterator code through the use of:
 #    iter(callable, sentinel) -> iterator
-#    itertools.count()
 #    anything else in itertools?
 # * Blit
 #   * Currently broken with Qt4 for widgets that don't start on screen
@@ -709,11 +708,6 @@ class ArtistAnimation(TimedAnimation):
         for artist in artists:
             artist.set_visible(True)
 
-# Do nothing generator for use in procedural animations that live-generate
-# data.
-def null_generator():
-    while True: yield 0
-
 class FuncAnimation(TimedAnimation):
     '''
     Makes an animation by repeatedly calling a function *func*, passing in
@@ -734,12 +728,13 @@ class FuncAnimation(TimedAnimation):
         self._func = func
 
         # Set up a function that creates a new iterable when needed. If nothing
-        # is passed in for frames, just use the null_generator. A callable
-        # passed in for frames is assumed to be a generator. An iterable will
-        # be used as is, and anything else will be treated as a number of
-        # frames.
+        # is passed in for frames, just use itertools.count, which will just
+        # keep counting from 0. A callable passed in for frames is assumed to
+        # be a generator. An iterable will be used as is, and anything else
+        # will be treated as a number of frames.
         if frames is None:
-            self._iter_gen = null_generator
+            import itertools
+            self._iter_gen = itertools.count
         elif callable(frames):
             self._iter_gen = frames
         elif iterable(frames):
