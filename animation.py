@@ -401,7 +401,7 @@ class Animation(object):
 
         # Connect to the figure's close_event so that we don't continue to
         # fire events and try to draw to a deleted figure.
-        self._fig.canvas.mpl_connect('close_event', self._stop)
+        self._close_id = self._fig.canvas.mpl_connect('close_event', self._stop)
         if blit:
             self._setup_blit()
 
@@ -421,6 +421,7 @@ class Animation(object):
         # On stop we disconnect all of our events.
         if self._blit:
             self._fig.canvas.mpl_disconnect(self._resize_id)
+        self._fig.canvas.mpl_disconnect(self._close_id)
         self.event_source.remove_callback(self._step)
         self.event_source = None
 
