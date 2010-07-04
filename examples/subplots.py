@@ -3,6 +3,11 @@ import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 from animation import TimedAnimation
 
+# This example uses subclassing, but there is no reason that the proper function
+# couldn't be set up and then use FuncAnimation. The code is long, but not
+# really complex. The length is due solely to the fact that there are a total
+# of 9 lines that need to be changed for the animation as well as 3 subplots
+# that need initial set up.
 class SubplotAnimation(TimedAnimation):
     def __init__(self):
         fig = plt.figure()
@@ -49,7 +54,7 @@ class SubplotAnimation(TimedAnimation):
         ax3.set_xlim(-1, 1)
         ax3.set_ylim(0, 800)
 
-        TimedAnimation.__init__(self, fig, interval=50, blit=False)
+        TimedAnimation.__init__(self, fig, interval=50, blit=True)
 
     def _draw_frame(self, framedata):
         i = framedata
@@ -75,6 +80,13 @@ class SubplotAnimation(TimedAnimation):
 
     def new_frame_seq(self):
         return iter(range(self.t.size))
+
+    def _init_draw(self):
+        lines =  [self.line1, self.line1a, self.line1e,
+            self.line2, self.line2a, self.line2e,
+            self.line3, self.line3a, self.line3e]
+        for l in lines:
+            l.set_data([], [])
 
 ani = SubplotAnimation()
 #ani.save('test_sub.mp4')
