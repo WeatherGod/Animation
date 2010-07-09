@@ -2,14 +2,10 @@
 # * Documentation -- this will need a new section of the User's Guide.
 #      Both for Animations and just timers.
 #   - Also need to update http://www.scipy.org/Cookbook/Matplotlib/Animations
-# * Need to look at simplyfing iterator code through the use of:
-#    iter(callable, sentinel) -> iterator
-#    anything else in itertools?
 # * Blit
 #   * Currently broken with Qt4 for widgets that don't start on screen
 #   * Still a few edge cases that aren't working correctly
 #   * Can this integrate better with existing matplotlib animation artist flag?
-#   * Doesn't work with subplots example
 # * Example
 #   * Frameless animation - pure procedural with no loop
 #   * Need example that uses something like inotify or subprocess
