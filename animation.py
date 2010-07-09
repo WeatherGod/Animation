@@ -9,7 +9,7 @@
 # * Example
 #   * Frameless animation - pure procedural with no loop
 #   * Need example that uses something like inotify or subprocess
-#   * Eric's complex syncing examples
+#   * Complex syncing examples
 # * Movies
 #   * Library to make movies?
 #   * RC parameter for config?
@@ -381,12 +381,17 @@ class FuncAnimation(TimedAnimation):
     used.
     '''
     def __init__(self, fig, func, frames=None ,init_func=None, fargs=None,
-            **kwargs):
+            save_count=None, **kwargs):
         if fargs:
             self._args = fargs
         else:
             self._args = ()
         self._func = func
+
+        # Amount of framedata to keep around for saving movies. This is only
+        # used if we don't know how many frames there will be: in the case
+        # of no generator or in the case of a callable.
+        self.save_count = save_count
 
         # Set up a function that creates a new iterable when needed. If nothing
         # is passed in for frames, just use itertools.count, which will just
@@ -400,8 +405,14 @@ class FuncAnimation(TimedAnimation):
             self._iter_gen = frames
         elif iterable(frames):
             self._iter_gen = lambda: iter(frames)
+            self.save_count = len(frames)
         else:
             self._iter_gen = lambda: iter(range(frames))
+            self.save_count = frames
+
+        # If we're passed in and using the default, set it to 100.
+        if self.save_count is None:
+            self.save_count = 100
 
         self._init_func = init_func
         self._save_seq = []
@@ -429,6 +440,9 @@ class FuncAnimation(TimedAnimation):
     def _draw_frame(self, framedata):
         # Save the data for potential saving of movies.
         self._save_seq.append(framedata)
+
+        # Make sure to respect save_count (keep only the last save_count around)
+        self._save_seq = self._save_seq[-self.save_count:]
 
         # Call the func with framedata and args. If blitting is desired,
         # func needs to return a sequence of any artists that were modified.
@@ -461,7 +475,7 @@ if __name__ == '__main__':
     ims = []
     for add in np.arange(15):
         ims.append((plt.pcolor(x, y, base + add, norm=plt.Normalize(0, 30)),))
-    im_ani = ArtistAnimation(fig2, ims, interval=50, repeat_delay=1000, blit=False)
+    im_ani = ArtistAnimation(fig2, ims, interval=50, repeat_delay=1000, blit=True)
 #    im_ani.save('im.mp4')
 
     plt.show()
